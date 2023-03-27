@@ -1,0 +1,12 @@
+main: de.safespacegerman.core.SpaceCorePlugin
+name: SpaceCore
+version: ${project.version}
+api-version: 1.19
+
+authors:
+  - LuciferMorningstarDev
+
+depend:
+  - LuckPerms
+
+load: STARTUP

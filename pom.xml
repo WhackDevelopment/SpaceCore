@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.safespacegerman.core</groupId>
+    <artifactId>SpaceCore</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <developers>
+        <developer>
+            <id>LuciferMorningstarDev</id>
+            <name>Lucifer Morningstar</name>
+            <email>contact@lucifer-morningstar.xyz</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+
+        <maven.deploy.skip>false</maven.deploy.skip>
+        <paper.version>1.19.3-R0.1-SNAPSHOT</paper.version>
+        <luckperms.version>5.4</luckperms.version>
+        <gson.version>2.10.1</gson.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+    <modules>
+        <module>api</module>
+        <module>plugin</module>
+    </modules>
+
+</project>
