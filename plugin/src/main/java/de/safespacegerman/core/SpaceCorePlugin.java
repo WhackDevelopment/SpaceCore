@@ -3,7 +3,9 @@ package de.safespacegerman.core;
 import de.safespacegerman.core.commands.bukkit.GamemodeCommand;
 import de.safespacegerman.core.commands.core.BedCommand;
 import de.safespacegerman.core.commands.core.SpawnCommand;
+import de.safespacegerman.core.listener.PlayerListener;
 import de.safespacegerman.core.listener.PortalEnterListener;
+import de.safespacegerman.core.perms.PermissionManager;
 import de.safespacegerman.core.utils.ChatUtil;
 import de.safespacegerman.core.utils.Resources;
 import net.luckperms.api.LuckPerms;
@@ -27,6 +29,7 @@ public class SpaceCorePlugin extends JavaPlugin {
     }
 
     private LuckPerms luckPerms;
+    private PermissionManager perms;
 
     @Override
     public void onLoad() {
@@ -43,6 +46,8 @@ public class SpaceCorePlugin extends JavaPlugin {
         this.saveDefaultConfig();
         this.reloadConfig();
 
+        this.perms = new PermissionManager(this.luckPerms);
+
         CommandMap cmds = Bukkit.getCommandMap();
         cmds.register("core", new BedCommand(this));
         cmds.register("core", new SpawnCommand(this));
@@ -50,6 +55,7 @@ public class SpaceCorePlugin extends JavaPlugin {
         cmds.register("core-bukkit", new GamemodeCommand(this));
 
         PluginManager mng = Bukkit.getPluginManager();
+        mng.registerEvents(new PlayerListener(this), this);
         mng.registerEvents(new PortalEnterListener(this), this);
 
         ChatUtil.replySenderComponent(this.getServer().getConsoleSender(), "&a" + this.getName() + " Enabled");
@@ -71,4 +77,11 @@ public class SpaceCorePlugin extends JavaPlugin {
         }
     }
 
+    public LuckPerms getLuckPerms() {
+        return luckPerms;
+    }
+
+    public PermissionManager getPerms() {
+        return perms;
+    }
 }
