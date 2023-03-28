@@ -13,15 +13,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.lkeehl</groupId>
-            <artifactId>tagapi</artifactId>
-            <version>${tagapi.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>net.luckperms</groupId>
             <artifactId>api</artifactId>
             <version>${luckperms.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>${protocol-lib.version}</version>
             <scope>provided</scope>
         </dependency>
 

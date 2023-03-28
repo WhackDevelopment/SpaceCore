@@ -1,6 +1,5 @@
 package de.safespacegerman.core;
 
-import com.lkeehl.tagapi.TagAPI;
 import de.safespacegerman.core.commands.bukkit.GamemodeCommand;
 import de.safespacegerman.core.commands.core.BedCommand;
 import de.safespacegerman.core.commands.core.SpawnCommand;
@@ -43,7 +42,7 @@ public class SpaceCorePlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         Constants.VERSION = Resources.readToString("version.txt").trim();
-        TagAPI.onEnable(this);
+        
         this.loadLuckPerms();
         this.saveDefaultConfig();
         this.reloadConfig();
@@ -65,7 +64,6 @@ public class SpaceCorePlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        TagAPI.onDisable();
         ChatUtil.replySenderComponent(this.getServer().getConsoleSender(), "&c" + this.getName() + " Disabled");
     }
 

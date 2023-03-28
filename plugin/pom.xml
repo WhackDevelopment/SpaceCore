@@ -25,9 +25,10 @@
         </dependency>
 
         <dependency>
-            <groupId>com.lkeehl</groupId>
-            <artifactId>tagapi</artifactId>
-            <version>${tagapi.version}</version>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>${protocol-lib.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

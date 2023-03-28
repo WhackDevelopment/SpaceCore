@@ -1,7 +1,7 @@
 package de.safespacegerman.core.listener;
 
-import com.lkeehl.tagapi.TagBuilder;
 import de.safespacegerman.core.SpaceCorePlugin;
+import de.safespacegerman.core.naming.NameTag;
 import de.safespacegerman.core.salami.ComponentSerializer;
 import de.safespacegerman.core.utils.DateUtils;
 import io.papermc.paper.chat.ChatRenderer;
@@ -67,12 +67,6 @@ public class PlayerListener implements Listener {
                 )
         );
 
-        TagBuilder builder = TagBuilder.create(player);
-        final String finalNameColor = nameColor;
-        final String finalPlayerPrefix = playerPrefix;
-        builder.withLine(pl -> (finalPlayerPrefix + "&r" + finalNameColor + pl.getName() + "&r"));
-        builder.build();
-
         String groupId = plugin.getPerms().getDefaultPlayerGroupId(player.getUniqueId());
         Group playerGroup = plugin.getPerms().loadGroup(groupId);
         int playerGroupWeight = playerGroup.getWeight().orElse(0);
@@ -84,9 +78,19 @@ public class PlayerListener implements Listener {
         }
 
         playerTeam.addPlayer(player);
+
+        Bukkit.getOnlinePlayers().forEach(current -> {
+            try {
+                String currentPrefix = plugin.getPerms().getPrefix(current.getUniqueId());
+                if (currentPrefix == null) currentPrefix = "&r";
+                new NameTag(current).setPrefix(currentPrefix + "&r").build();
+            } catch (Exception e) {
+            }
+        });
     }
 
-    public static String convertToSixDigits(int num) {
+
+    private String convertToSixDigits(int num) {
         if (num > 100000) {
             return "100000";
         } else {
