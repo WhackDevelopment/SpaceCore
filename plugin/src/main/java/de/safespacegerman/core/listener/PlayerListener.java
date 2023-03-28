@@ -2,6 +2,7 @@ package de.safespacegerman.core.listener;
 
 import de.safespacegerman.core.SpaceCorePlugin;
 import de.safespacegerman.core.salami.ComponentSerializer;
+import de.safespacegerman.core.utils.DateUtils;
 import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
@@ -14,6 +15,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Date;
 
 /**
  * SpaceCore; de.safespacegerman.core.listener:PlayerListener
@@ -81,10 +84,13 @@ public class PlayerListener implements Listener {
                     displayName.hoverEvent(HoverEvent.showText(
                             ComponentSerializer.etAndHEX.deserialize(
                                     String.join("\n", new String[]{
-                                            "&7Username: &a" + sender.getName(),
+                                            "&7Username: &9" + sender.getName(),
                                             "&7Prefix: " + plugin.getPerms().getPrefix(sender.getUniqueId()),
                                             "&7Level: &9" + sender.getLevel(),
-                                            "&7Gamemode: &6" + sender.getGameMode()
+                                            "&7Gamemode: &9" + sender.getGameMode().toString().toLowerCase(),
+                                            "&7Erstmalig Gejoined: &9" + DateUtils.convertDateToString(new Date(sender.getFirstPlayed())),
+                                            "&7Zuletzt Gejoined: &9" + DateUtils.convertDateToString(new Date(sender.getLastLogin())),
+                                            "&7Aktuelle Welt: &9" + sender.getWorld().getName()
                                     })
                             )
                     )),
