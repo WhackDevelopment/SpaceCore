@@ -1,5 +1,6 @@
 package de.safespacegerman.core.listener;
 
+import com.lkeehl.tagapi.TagBuilder;
 import de.safespacegerman.core.SpaceCorePlugin;
 import de.safespacegerman.core.salami.ComponentSerializer;
 import de.safespacegerman.core.utils.DateUtils;
@@ -9,11 +10,14 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.luckperms.api.model.group.Group;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
@@ -63,6 +67,31 @@ public class PlayerListener implements Listener {
                 )
         );
 
+        TagBuilder builder = TagBuilder.create(player);
+        final String finalNameColor = nameColor;
+        final String finalPlayerPrefix = playerPrefix;
+        builder.withLine(pl -> (finalPlayerPrefix + "&r" + finalNameColor + pl.getName() + "&r"));
+        builder.build();
+
+        String groupId = plugin.getPerms().getDefaultPlayerGroupId(player.getUniqueId());
+        Group playerGroup = plugin.getPerms().loadGroup(groupId);
+        int playerGroupWeight = playerGroup.getWeight().orElse(0);
+
+        String teamName = convertToSixDigits(playerGroupWeight) + "-" + groupId;
+        Team playerTeam = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(teamName);
+        if (playerTeam == null) {
+            playerTeam = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(teamName);
+        }
+
+        playerTeam.addPlayer(player);
+    }
+
+    public static String convertToSixDigits(int num) {
+        if (num > 100000) {
+            return "100000";
+        } else {
+            return String.format("%06d", num);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
