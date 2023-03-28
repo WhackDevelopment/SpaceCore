@@ -1,7 +1,6 @@
 package de.safespacegerman.core.listener;
 
 import de.safespacegerman.core.SpaceCorePlugin;
-import de.safespacegerman.core.naming.NameTag;
 import de.safespacegerman.core.salami.ComponentSerializer;
 import de.safespacegerman.core.utils.DateUtils;
 import io.papermc.paper.chat.ChatRenderer;
@@ -79,16 +78,7 @@ public class PlayerListener implements Listener {
 
         playerTeam.addPlayer(player);
 
-        Bukkit.getOnlinePlayers().forEach(current -> {
-            try {
-                String currentPrefix = plugin.getPerms().getPrefix(current.getUniqueId());
-                if (currentPrefix == null) currentPrefix = "&r";
-                new NameTag(current).setPrefix(currentPrefix + "&r").build();
-            } catch (Exception e) {
-            }
-        });
     }
-
 
     private String convertToSixDigits(int num) {
         if (num > 100000) {
