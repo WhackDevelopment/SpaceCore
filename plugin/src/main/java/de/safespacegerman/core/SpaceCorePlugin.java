@@ -42,7 +42,7 @@ public class SpaceCorePlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         Constants.VERSION = Resources.readToString("version.txt").trim();
-        
+
         this.loadLuckPerms();
         this.saveDefaultConfig();
         this.reloadConfig();

@@ -74,10 +74,21 @@ public class PlayerListener implements Listener {
         Team playerTeam = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(teamName);
         if (playerTeam == null) {
             playerTeam = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(teamName);
+
+
+            playerTeam.prefix(
+                    ComponentSerializer.etAndHEX.deserialize(
+                            playerPrefix + "&r" + nameColor
+                    )
+            );
+            playerTeam.displayName(
+                    ComponentSerializer.etAndHEX.deserialize(
+                            playerPrefix
+                    )
+            );
         }
 
         playerTeam.addPlayer(player);
-
     }
 
     private String convertToSixDigits(int num) {
