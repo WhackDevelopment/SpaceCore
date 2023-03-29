@@ -1,5 +1,6 @@
 package de.safespacegerman.core;
 
+import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import de.safespacegerman.core.commands.bukkit.GamemodeCommand;
 import de.safespacegerman.core.commands.core.BedCommand;
 import de.safespacegerman.core.commands.core.SpawnCommand;
@@ -7,6 +8,7 @@ import de.safespacegerman.core.listener.PlayerListener;
 import de.safespacegerman.core.listener.PortalEnterListener;
 import de.safespacegerman.core.perms.PermissionManager;
 import de.safespacegerman.core.utils.ChatUtil;
+import de.safespacegerman.core.utils.DiscordWebhook;
 import de.safespacegerman.core.utils.Resources;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -59,11 +61,24 @@ public class SpaceCorePlugin extends JavaPlugin {
         mng.registerEvents(new PlayerListener(this), this);
         mng.registerEvents(new PortalEnterListener(this), this);
 
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+            WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
+            webhookMessageBuilder.setUsername("Minecraft Server");
+            webhookMessageBuilder.setAvatarUrl(getConfig().getString("serverAvatar", "https://cdn.discordapp.com/attachments/1040778980992766054/1090748202854129744/ssg_bot.png"));
+            webhookMessageBuilder.setContent(getConfig().getString("emoji.success", "") + " Der Server wurde neu gestartet.");
+            DiscordWebhook.executeHook(webhookMessageBuilder, this.getConfig().getString("chatRelay", ""));
+        }, 20*5);
+
         ChatUtil.replySenderComponent(this.getServer().getConsoleSender(), "&a" + this.getName() + " Enabled");
     }
 
     @Override
     public void onDisable() {
+        WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
+        webhookMessageBuilder.setUsername("Minecraft Server");
+        webhookMessageBuilder.setAvatarUrl(getConfig().getString("serverAvatar", "https://cdn.discordapp.com/attachments/1040778980992766054/1090748202854129744/ssg_bot.png"));
+        webhookMessageBuilder.setContent(getConfig().getString("emoji.error", "") + " Der Server wurde gestoppt.");
+        DiscordWebhook.executeHook(webhookMessageBuilder, this.getConfig().getString("chatRelay", ""));
         ChatUtil.replySenderComponent(this.getServer().getConsoleSender(), "&c" + this.getName() + " Disabled");
     }
 

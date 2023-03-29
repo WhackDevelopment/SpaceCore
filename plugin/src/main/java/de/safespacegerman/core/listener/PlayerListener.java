@@ -1,8 +1,10 @@
 package de.safespacegerman.core.listener;
 
+import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import de.safespacegerman.core.SpaceCorePlugin;
 import de.safespacegerman.core.salami.ComponentSerializer;
 import de.safespacegerman.core.utils.DateUtils;
+import de.safespacegerman.core.utils.StringUtils;
 import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
@@ -11,15 +13,19 @@ import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.luckperms.api.model.group.Group;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
+
+import static de.safespacegerman.core.utils.DiscordWebhook.executeHook;
 
 /**
  * SpaceCore; de.safespacegerman.core.listener:PlayerListener
@@ -29,6 +35,7 @@ import java.util.Date;
  */
 public class PlayerListener implements Listener {
 
+    private final String webhookURL;
     private SpaceCorePlugin plugin;
 
     private ChatRenderer chatRenderer;
@@ -36,6 +43,7 @@ public class PlayerListener implements Listener {
     public PlayerListener(SpaceCorePlugin plugin) {
         this.plugin = plugin;
         this.chatRenderer = new Renderer();
+        this.webhookURL = plugin.getConfig().getString("chatRelay", "");
     }
 
     @EventHandler
@@ -104,6 +112,11 @@ public class PlayerListener implements Listener {
         if (event.getPlayer() == null) return;
         if (event.isCancelled()) return;
         event.renderer(this.chatRenderer);
+        try {
+            handleChatToDiscord(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private class Renderer implements ChatRenderer {
@@ -136,5 +149,45 @@ public class PlayerListener implements Listener {
             return finalComponent;
         }
     }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onQuitDiscord(PlayerQuitEvent event) {
+        if (event.getPlayer() == null) return;
+        WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
+        webhookMessageBuilder.setUsername("Minecraft Server");
+        webhookMessageBuilder.setAvatarUrl(plugin.getConfig().getString("serverAvatar", "https://cdn.discordapp.com/attachments/1040778980992766054/1090748202854129744/ssg_bot.png"));
+        webhookMessageBuilder.setContent(plugin.getConfig().getString("emoji.leave", "") + " **`" + event.getPlayer().getName() + "` hat den Server verlassen.**");
+        executeHook(webhookMessageBuilder, webhookURL);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onJoinDiscord(PlayerJoinEvent event) {
+        if (event.getPlayer() == null) return;
+        WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
+        webhookMessageBuilder.setUsername("Minecraft Server");
+        webhookMessageBuilder.setAvatarUrl(plugin.getConfig().getString("serverAvatar", "https://cdn.discordapp.com/attachments/1040778980992766054/1090748202854129744/ssg_bot.png"));
+        webhookMessageBuilder.setContent(plugin.getConfig().getString("emoji.join", "") + " **`" + event.getPlayer().getName() + "` ist dem Server beigetreten.**");
+        executeHook(webhookMessageBuilder, webhookURL);
+    }
+
+    private void sendPlayerMessage(Player player, String message) {
+        message = StringUtils.redactUrls(message);
+        message = StringUtils.redactUrlsAndDomains(message);
+        message = StringUtils.redactDiscordMentions(message);
+        WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
+        webhookMessageBuilder.setUsername(player.getName());
+        webhookMessageBuilder.setAvatarUrl("https://mc-heads.net/head/" + player.getUniqueId().toString() + "/512/right");
+        webhookMessageBuilder.setContent(message);
+        executeHook(webhookMessageBuilder, webhookURL);
+    }
+
+
+    private void handleChatToDiscord(AsyncChatEvent event) {
+        Component originalMessageComponent = event.originalMessage();
+        String originalMessage = ComponentSerializer.etAndHEX.serialize(originalMessageComponent);
+        final String finalContent = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', originalMessage));
+        new Thread(() -> sendPlayerMessage(event.getPlayer(), finalContent), "execute-chat-hook").start();
+    }
+
 
 }

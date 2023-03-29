@@ -3,6 +3,10 @@ config-version: 1 # -> DO NOT CHANGE
 # Print debug messages to the console?
 debug: false
 
-
-
-
+chatRelay: 'webhook url'
+serverAvatar: 'https://cdn.discordapp.com/attachments/1040778980992766054/1090748202854129744/ssg_bot.png'
+emoji:
+  join: '<:ssg_join:1090746130117169162>'
+  leave: '<:ssg_leave:1090746115697168424>'
+  success: '<:ssg_success:1090746112576593961>'
+  error: '<:ssg_error:1090746142632980490>'

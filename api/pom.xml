@@ -13,6 +13,13 @@
 
     <dependencies>
         <dependency>
+            <groupId>club.minnced</groupId>
+            <artifactId>discord-webhooks</artifactId>
+            <version>${webhooks.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>net.luckperms</groupId>
             <artifactId>api</artifactId>
             <version>${luckperms.version}</version>
@@ -39,12 +46,6 @@
             <version>${paper.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>${paper.version}</version>
-            <scope>provided</scope>
-        </dependency> -->
     </dependencies>
 
     <build>
