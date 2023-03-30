@@ -63,11 +63,11 @@ public class SpaceCorePlugin extends JavaPlugin {
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
             WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
-            webhookMessageBuilder.setUsername("Minecraft Server");
+            webhookMessageBuilder.setUsername("System");
             webhookMessageBuilder.setAvatarUrl(getConfig().getString("serverAvatar", "https://cdn.discordapp.com/attachments/1040778980992766054/1090748202854129744/ssg_bot.png"));
             webhookMessageBuilder.setContent(getConfig().getString("emoji.success", "") + " Der Server wurde neu gestartet.");
             DiscordWebhook.executeHook(webhookMessageBuilder, this.getConfig().getString("chatRelay", ""));
-        }, 20*5);
+        }, 20 * 5);
 
         ChatUtil.replySenderComponent(this.getServer().getConsoleSender(), "&a" + this.getName() + " Enabled");
     }
@@ -75,7 +75,7 @@ public class SpaceCorePlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
-        webhookMessageBuilder.setUsername("Minecraft Server");
+        webhookMessageBuilder.setUsername("System");
         webhookMessageBuilder.setAvatarUrl(getConfig().getString("serverAvatar", "https://cdn.discordapp.com/attachments/1040778980992766054/1090748202854129744/ssg_bot.png"));
         webhookMessageBuilder.setContent(getConfig().getString("emoji.error", "") + " Der Server wurde gestoppt.");
         DiscordWebhook.executeHook(webhookMessageBuilder, this.getConfig().getString("chatRelay", ""));

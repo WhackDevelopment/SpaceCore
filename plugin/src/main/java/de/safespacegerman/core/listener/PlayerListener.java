@@ -14,10 +14,12 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.luckperms.api.model.group.Group;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.Team;
@@ -154,7 +156,7 @@ public class PlayerListener implements Listener {
     public void onQuitDiscord(PlayerQuitEvent event) {
         if (event.getPlayer() == null) return;
         WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
-        webhookMessageBuilder.setUsername("Minecraft Server");
+        webhookMessageBuilder.setUsername("System");
         webhookMessageBuilder.setAvatarUrl(plugin.getConfig().getString("serverAvatar", "https://cdn.discordapp.com/attachments/1040778980992766054/1090748202854129744/ssg_bot.png"));
         webhookMessageBuilder.setContent(plugin.getConfig().getString("emoji.leave", "") + " **`" + event.getPlayer().getName() + "` hat den Server verlassen.**");
         executeHook(webhookMessageBuilder, webhookURL);
@@ -164,10 +166,29 @@ public class PlayerListener implements Listener {
     public void onJoinDiscord(PlayerJoinEvent event) {
         if (event.getPlayer() == null) return;
         WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
-        webhookMessageBuilder.setUsername("Minecraft Server");
+        webhookMessageBuilder.setUsername("System");
         webhookMessageBuilder.setAvatarUrl(plugin.getConfig().getString("serverAvatar", "https://cdn.discordapp.com/attachments/1040778980992766054/1090748202854129744/ssg_bot.png"));
         webhookMessageBuilder.setContent(plugin.getConfig().getString("emoji.join", "") + " **`" + event.getPlayer().getName() + "` ist dem Server beigetreten.**");
         executeHook(webhookMessageBuilder, webhookURL);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onJoinDiscord(PlayerDeathEvent event) {
+        if (event.getPlayer() == null) return;
+        if (event.isCancelled()) return;
+        if (event.getEntityType() != EntityType.PLAYER) return;
+        Player player = event.getPlayer();
+        String deathMessage = getDeathMessage(player);
+        WebhookMessageBuilder webhookMessageBuilder = new WebhookMessageBuilder();
+        webhookMessageBuilder.setUsername("System");
+        webhookMessageBuilder.setAvatarUrl(plugin.getConfig().getString("deathAvatar", "https://cdn.discordapp.com/attachments/1040778980992766054/1091043857598263386/skull_icon.png"));
+        webhookMessageBuilder.setContent(deathMessage);
+        executeHook(webhookMessageBuilder, webhookURL);
+    }
+
+    private String getDeathMessage(Player player) {
+        // TODO: use DefaultDeathMessages.<messageType> and add replacements...
+        return " **`" + player.getName() + "` ist gestorben.";
     }
 
     private void sendPlayerMessage(Player player, String message) {
