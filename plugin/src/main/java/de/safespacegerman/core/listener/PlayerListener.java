@@ -188,7 +188,7 @@ public class PlayerListener implements Listener {
 
     private String getDeathMessage(Player player) {
         // TODO: use DefaultDeathMessages.<messageType> and add replacements...
-        return " **`" + player.getName() + "` ist gestorben.";
+        return "<:ssg_death:1091398575981858887> **`" + player.getName() + "` ist gestorben.**";
     }
 
     private void sendPlayerMessage(Player player, String message) {

@@ -3,8 +3,10 @@ name: SpaceCore
 version: ${project.version}
 api-version: 1.19
 
+website: https://whackdevelopment.com
+
 authors:
-  - LuciferMorningstarDev
+  - 'whackdevelopment.com'
 
 depend:
   - LuckPerms
